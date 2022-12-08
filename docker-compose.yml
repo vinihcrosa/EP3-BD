@@ -13,21 +13,25 @@ services:
     volumes:
       - ./backend:/usr/src/app
     links:
-      - db
+      - ep-postgres
+    networks:
+      - EP-BD
 
-  db:
-    image: mysql:8.0
-    ports:
-      - "3306:3306"
-    restart: always
+  ep-postgres:
+    image: postgres:11.5
+    container_name: ep-postgres
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mydb
+    ports:
+      - "15432:5432"
     volumes:
-      - db:/var/lib/mysql
+      - ./data/postgres:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    networks:
+      - EP-BD
     
   front:
     build: ./front
@@ -37,7 +41,13 @@ services:
       - ./front:/app
     links:
       - server
+    networks:
+      - EP-BD
 
 volumes: 
   db:
     driver: local
+
+networks:
+  EP-BD:
+    driver: bridge
