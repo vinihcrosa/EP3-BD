@@ -1,13 +1,15 @@
 FROM node:18-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
-COPY package*.json ./
+RUN npm i nodemon -g
 
-RUN npm install
+COPY package*.json .
+
+RUN npm i
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3333
 
 CMD [ "npm", "run", "dev" ]

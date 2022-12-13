@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS Conflitos (
   PRIMARY KEY (CodigoNum));
 
 
+
 -- -----------------------------------------------------
 -- Table Territoriais
 -- -----------------------------------------------------
