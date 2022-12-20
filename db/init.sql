@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS Conflitos (
   PRIMARY KEY (CodigoNum));
 
 
-
 -- -----------------------------------------------------
 -- Table Territoriais
 -- -----------------------------------------------------
@@ -38,7 +37,7 @@ CREATE TABLE IF NOT EXISTS Religiosos (
 
 
 -- -----------------------------------------------------
--- Table Econômicos
+-- Table EconÃ´micos
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Economicos (
   Conflitos_CodigoNum INT NOT NULL,
@@ -203,7 +202,7 @@ CREATE TABLE IF NOT EXISTS Traficantes_fornecem_TipoArma_GruposArmados (
 -- Table Divisao
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Divisao (
-  CodConsecutivo SERIAL NOT NULL UNIQUE,
+  CodConsecutivo INT,
   GruposArmados_CodCombatente INT NOT NULL,
   NumBaixas INT NOT NULL,
   Barcos INT NOT NULL,

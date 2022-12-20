@@ -31,16 +31,11 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/01_init.sql
-      - ./db/Conflitos.sql:/docker-entrypoint-initdb.d/02_Conflitos.sql
-      - ./db/Territoriais.sql:/docker-entrypoint-initdb.d/03_Territoriais.sql
-      - ./db/Religiosos.sql:/docker-entrypoint-initdb.d/04_Religiosos.sql
-      - ./db/Economicos.sql:/docker-entrypoint-initdb.d/05_Economicos.sql
-      - ./db/Raciais.sql:/docker-entrypoint-initdb.d/06_Raciais.sql
-      - ./db/Conflito_paisesAfetados.sql:/docker-entrypoint-initdb.d/07_Conflito_paisesAfetados.sql
-      - ./db/Combatentes.sql:/docker-entrypoint-initdb.d/08_Combatentes.sql
-      - ./db/GruposArmados.sql:/docker-entrypoint-initdb.d/09_GruposArmados.sql
-      - ./db/Organizacao.sql:/docker-entrypoint-initdb.d/10_Organizacao.sql
-      - ./db/OrganizacoesMediadoras.sql:/docker-entrypoint-initdb.d/11_OrganizacoesMediadoras.sql
+      - ./db/ex1-a.sql:/docker-entrypoint-initdb.d/02_ex1-a.sql
+      - ./db/ex1-b.sql:/docker-entrypoint-initdb.d/03_ex1-b.sql
+      - ./db/ex1-c.sql:/docker-entrypoint-initdb.d/04_ex1-c.sql
+      - ./db/ex1-d.sql:/docker-entrypoint-initdb.d/05_ex1-d.sql
+
     restart: always
     networks:
       - EP-BD
