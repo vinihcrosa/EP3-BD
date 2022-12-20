@@ -16,7 +16,8 @@ export const SidebarContainer = styled.div`
 `
 
 export const Image = styled.img`
-  margin-top: 47px;
+  padding: 50px;
+  margin-top: 100px;
   margin-bottom: 70px;
   width: 170px;
 `

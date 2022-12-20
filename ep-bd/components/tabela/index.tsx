@@ -18,8 +18,10 @@ export default function Tabela(props: ITabelaProps) {
     <TableContainer>
       <Table>
         <TableHeader>
-          <TableHeaderCell>{props.columnTitle}</TableHeaderCell>
-          <TableHeaderCell>{props.columnData}</TableHeaderCell>
+          <tr>
+            <TableHeaderCell>{props.columnTitle}</TableHeaderCell>
+            <TableHeaderCell>{props.columnData}</TableHeaderCell>
+          </tr>
         </TableHeader>
         <TableBody>
           {props.data.map((item, index) => (
