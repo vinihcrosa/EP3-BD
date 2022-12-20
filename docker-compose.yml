@@ -1,24 +1,6 @@
 version: '3'
 
 services:
-  server:
-    build: ./backend
-    command: npm run dev
-    ports:
-      - "3333:3333"
-    environment:
-      DB_DATABASE: mydb
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: ep-postgres
-      DB_PORT: 5432
-    volumes:
-      - ./backend:/usr/app
-    links:
-      - ep-postgres
-    networks:
-      - EP-BD
-
   ep-postgres:
     image: postgres:11.5
     container_name: ep-postgres
@@ -39,19 +21,23 @@ services:
     restart: always
     networks:
       - EP-BD
-    
-  front:
-    build: ./front
+
+  ep-bd:
+    build: ./ep-bd
     ports:
       - "3000:3000"
     volumes:
-      - ./front:/app
-    links:
-      - server
+      - ./ep-bd:/app
     networks:
       - EP-BD
+    environment:
+      DB_DATABASE: mydb
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: ep-postgres
+      DB_PORT: 5432
 
-volumes: 
+volumes:
   db:
     driver: local
 

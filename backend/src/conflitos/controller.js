@@ -19,4 +19,12 @@ async function getConflitos(req, res) {
   })
 }
 
-module.exports = { getConflitos };
+async function getConflitosPorMortos() {
+  const query = 'SELECT * FROM public.conflitos ORDER BY nummortos DESC'
+  const client = await connect();
+  const result = await client.query(query);
+
+  return result.rows;
+}
+
+module.exports = { getConflitos, getConflitosPorMortos };
