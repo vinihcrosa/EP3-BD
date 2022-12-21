@@ -2,29 +2,18 @@ const connect = require('../../utils/db');
 
 async function getConflitos(req, res) {
   const client = await connect();
-  //racial
-  const conflitosRaciais = await client.query('SELECT COUNT(conflitos_codigonum) FROM public.raciais');
-  //religioso
-  const conflitosReligiosos = await client.query('SELECT COUNT(conflitos_codigonum) FROM public.religiosos');
-  //economico
-  const conflitoseconomicos = await client.query('SELECT COUNT(conflitos_codigonum) FROM public.economicos');
-  //territorial
-  const conflitosterritoriais = await client.query('SELECT COUNT(conflitos_codigonum) FROM public.territoriais');
+  const query = 'SELECT tipoconflito, COUNT(codigonum) FROM public.conflitos GROUP BY tipoconflito;'
 
-  res.send({
-    conflitosRaciais: conflitosRaciais.rows[0],
-    conflitosReligiosos: conflitosReligiosos.rows[0],
-    conflitoseconomicos: conflitoseconomicos.rows[0],
-    conflitosterritoriais: conflitosterritoriais.rows[0]
-  })
+  const result = await client.query(query);
+  res.send(result.rows)
 }
 
-async function getConflitosPorMortos() {
-  const query = 'SELECT * FROM public.conflitos ORDER BY nummortos DESC'
+async function getConflitosPorMortos(req, res) {
+  const query = 'SELECT * FROM public.conflitos ORDER BY nummortos DESC LIMIT 5'
   const client = await connect();
   const result = await client.query(query);
 
-  return result.rows;
+  return res.send(result.rows);
 }
 
 module.exports = { getConflitos, getConflitosPorMortos };

@@ -12,6 +12,8 @@ import { Bar } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 import { BarContainer, PageContainer } from "./styles";
 
+import api from "../../api";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -31,37 +33,32 @@ export const options = {
   },
 };
 
-const labelsOne = ["Territoriais", "Religiosos", "Econômicos", "Raciais"];
-const labelsTwo = ["1", "2", "3", "4", "5", "6", "7"];
-
-export const typeData = {
-  labels: labelsOne,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labelsOne.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      backgroundColor: "#3AB137",
-    },
-  ],
-};
-
-export const testData = {
-  labels: labelsTwo,
-  datasets: [
-    {
-      label: "Dataset 2",
-      data: labelsTwo.map(() => faker.datatype.number({ min: 0, max: 100 })),
-      backgroundColor: "#3AB137",
-    },
-  ],
-};
-
 export default function Grafico() {
+  const [conflitos, setConflitos] = React.useState<any>([]);
+
+  useEffect(() => {
+    const getConflitos = async () => {
+      const data = await api.get('/conflitos');
+      setConflitos(data.data);
+      console.log(data);
+    }
+    
+    getConflitos().catch((err) => console.log(err));
+
+  }, []);
+
+  const typeData = {
+    labels: conflitos.map((conflito: any) => conflito.tipoconflito),
+    datasets: [
+      {
+        label: "Quantidade de Conflitos por Tipo",
+        data: conflitos.map((conflito: any) => conflito.count),
+        backgroundColor: "#3AB137",
+      },
+    ],
+  };
   return (
     <PageContainer>
-      <BarContainer>
-        <Bar options={options} data={typeData} />
-      </BarContainer>
       <BarContainer>
         <Bar options={options} data={typeData} />
       </BarContainer>

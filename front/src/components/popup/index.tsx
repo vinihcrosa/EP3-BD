@@ -49,6 +49,13 @@ export default function Popup(props: any) {
     {label: "Organização 4"}
   ]
 
+  const conflitos = [
+    {label: "Conflito 1"},
+    {label: "Conflito 2"},
+    {label: "Conflito 3"},
+    {label: "Conflito 4"}
+  ]
+
   const Selector = styled(Select)({
     width: '300px',
     marginBottom: '40px',
@@ -147,6 +154,19 @@ export default function Popup(props: any) {
   const [lideresGrupo, setLideresGrupo] = useState<string[]>([]);
   const [divisoesGrupo, setDivisoesGrupo] = useState<string[]>([]);
   const [conflitosParticipantes, setConflitosParticipantes] = useState('');
+  const [gruposArmadosConflito, setGruposArmadosConflito] = useState<string[]>([]);
+
+  function handleGruposArmadosConflitoChange(event: any) {
+    const {
+      target: { value },
+    } = event;
+    if (value.length > 2) return 
+    setGruposArmadosConflito(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+    console.log(gruposArmadosConflito)
+  } 
 
   function handleNomeGrupoChange(event: any) {
     setNomeGrupo(event.target.value);
@@ -232,7 +252,8 @@ export default function Popup(props: any) {
       numHomens,
       numBaixas,
       grupoArmadoDivisao,
-      chefesMilitaresDivisao
+      faixaHierarquica,
+      chefeMilitarLider
     }
     console.log(info)
   }
@@ -242,6 +263,7 @@ export default function Popup(props: any) {
       numMortos,
       numFeridos,
       paisesAfetados,
+      gruposArmadosConflito,
       tipo,
       tipoData,
     }
@@ -251,9 +273,19 @@ export default function Popup(props: any) {
     const info = {
       nomeGrupo,
       numTotalBaixas,
-      lideresGrupo,
       divisoesGrupo,
       conflitosParticipantes,
+      numBarcos,
+      numTanques,
+      numAvioes,
+      numHomens,
+      numBaixas,
+      grupoArmadoDivisao,
+      faixaHierarquica,
+      chefeMilitarLider,
+      nomeLider,
+      descApoios,
+      orgDialog,
     }
     console.log(info)
   }
@@ -314,26 +346,16 @@ export default function Popup(props: any) {
               onChange={handleGrupoArmadoDivisaoChange}
               renderInput={(params) => <TextField {...params} label="Grupo armado que lidera" />}
             />
-            <FormControl sx={{marginBottom: '10px', width: 400 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Chefes Militares da divisão</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={chefesMilitaresDivisao}
-                onChange={handleChefesMilitaresDivisaoChange}
-                input={<OutlinedInput label="Chefes Militares da divisão" />}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-              >
-                {chefesMilitares.map((name) => (
-                  <MenuItem key={name.label} value={name.label}>
-                    <Checkbox checked={chefesMilitaresDivisao.indexOf(name.label) > -1} />
-                    <ListItemText primary={name.label} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TextField sx={{marginBottom: '10px', width: '400px'}} key="12" label="Faixa hierárquica do chefe militar" variant="outlined" onChange={handleFaixaHierarquicaChange} value={faixaHierarquica}/>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={lideresPol}
+              sx={{ marginBottom: '10px', width: '400px' }}
+              value={{label: chefeMilitarLider}}
+              onChange={handleChefeMilitarLiderChange}
+              renderInput={(params) => <TextField {...params} label="Líder político do chefe militar" />}
+            />
             <Botao variant="contained" label="Enviar" onPress={handleDivisaoSend}></Botao>
           </>
         }
@@ -343,6 +365,26 @@ export default function Popup(props: any) {
             <TextField sx={{marginBottom: '10px', width: '400px'}} label="Nº de mortos" variant="outlined" onChange={handleNumMortosChange} value={numMortos}/>
             <TextField sx={{marginBottom: '10px', width: '400px'}} label="Nº de feridos" variant="outlined" onChange={handleNumFeridosChange} value={numFeridos}/>
             <TextField sx={{marginBottom: '10px', width: '400px'}} label="Países afetados" variant="outlined" onChange={handlePaisesAfetadosChange} value={paisesAfetados}/>
+            <FormControl sx={{marginBottom: '10px', width: 400 }}>
+              <InputLabel id="demo-multiple-checkbox-label">Grupos armados participantes</InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={gruposArmadosConflito}
+                onChange={handleGruposArmadosConflitoChange}
+                input={<OutlinedInput label="Grupos armados participantes" />}
+                renderValue={(selected) => selected.join(', ')}
+                MenuProps={MenuProps}
+              >
+                {gruposArmados.map((name) => (
+                  <MenuItem key={name.label} value={name.label}>
+                    <Checkbox checked={gruposArmadosConflito.indexOf(name.label) > -1} />
+                    <ListItemText primary={name.label} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <SideInputsContainer>
               <Autocomplete
                 disablePortal
@@ -353,6 +395,7 @@ export default function Popup(props: any) {
                 onChange={handleTipoChange}
                 renderInput={(params) => <TextField {...params} label="Tipo" />}
               />
+              
               {tipo === 'Territoriais' &&
                 <TextField sx={{marginLeft: '10px',width: '195px'}} label="Regiões afetadas" variant="outlined" onChange={handleTipoDataChange} value={tipoData}/>
               }
@@ -373,47 +416,55 @@ export default function Popup(props: any) {
           <>
             <TextField sx={{marginBottom: '10px', width: '400px'}} key="12" label="Nome" variant="outlined" onChange={handleNomeGrupoChange} value={nomeGrupo}/>
             <TextField sx={{marginBottom: '10px', width: '400px'}} label="Número total de baixas" variant="outlined" onChange={handleNumTotalBaixasChange} value={numTotalBaixas}/>
-            <FormControl sx={{marginBottom: '10px', width: 400 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Líderes</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={lideresGrupo}
-                onChange={handleLideresGrupoChange}
-                input={<OutlinedInput label="Líderes" />}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-              >
-                {lideresPol.map((name) => (
-                  <MenuItem key={name.label} value={name.label}>
-                    <Checkbox checked={lideresGrupo.indexOf(name.label) > -1} />
-                    <ListItemText primary={name.label} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{marginBottom: '10px', width: 400 }}>
-              <InputLabel id="demo-multiple-checkbox-label">Divisões</InputLabel>
-              <Select
-                labelId="demo-multiple-checkbox-label"
-                id="demo-multiple-checkbox"
-                multiple
-                value={divisoesGrupo}
-                onChange={handleDivisoesGrupoChange}
-                input={<OutlinedInput label="Divisões" />}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-              >
-                {divisoes.map((name) => (
-                  <MenuItem key={name.label} value={name.label}>
-                    <Checkbox checked={divisoesGrupo.indexOf(name.label) > -1} />
-                    <ListItemText primary={name.label} />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
             <TextField sx={{marginBottom: '10px', width: '400px'}} label="Conflitos participantes" variant="outlined" onChange={handleConflitosParticipantesChange} value={conflitosParticipantes}/>
+            <SideInputsContainer>
+              <TextField sx={{marginRight: '10px', width: '140px'}} key="12" label="Nº de barcos" variant="outlined" onChange={handleNumBarcosChange} value={numBarcos}/>
+              <TextField sx={{marginRight: '10px', width: '140px'}} label="Nº de Tanques" variant="outlined" onChange={handleNumTanquesChange} value={numTanques}/>
+              <TextField sx={{marginRight: '10px', width: '140px'}} label="Nº de Aviões" variant="outlined" onChange={handleNumAvioesChange} value={numAvioes}/>
+              <TextField sx={{width: '140px'}} label="Nº de Homens" variant="outlined" onChange={handleNumHomensChange} value={numHomens}/>
+            </SideInputsContainer>
+            <TextField sx={{marginBottom: '10px', width: '400px'}} label="Nº de Baixas" variant="outlined" onChange={handleNumBaixasChange} value={numBaixas}/>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={gruposArmados}
+              sx={{ marginBottom: '10px', width: '400px' }}
+              value={grupoArmadoDivisao}
+              onChange={handleGrupoArmadoDivisaoChange}
+              renderInput={(params) => <TextField {...params} label="Grupo armado que lidera" />}
+            />
+            <TextField sx={{marginBottom: '10px', width: '400px'}} key="12" label="Faixa hierárquica do chefe militar" variant="outlined" onChange={handleFaixaHierarquicaChange} value={faixaHierarquica}/>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={lideresPol}
+              sx={{ marginBottom: '10px', width: '400px' }}
+              value={{label: chefeMilitarLider}}
+              onChange={handleChefeMilitarLiderChange}
+              renderInput={(params) => <TextField {...params} label="Líder político do chefe militar" />}
+            />
+            <TextField sx={{marginBottom: '10px', width: '400px'}} key="12" label="Nome do lider" variant="outlined" onChange={handleNomeLiderChange} value={nomeLider}/>
+            <TextField sx={{marginBottom: '10px', width: '400px'}} label="Descrição dos apoios do lider" variant="outlined" onChange={handleDescApoiosChange} value={descApoios}/>
+            <FormControl sx={{marginBottom: '10px', width: 400 }}>
+              <InputLabel id="demo-multiple-checkbox-label">Organizações que o lider dialoga</InputLabel>
+              <Select
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={orgDialog}
+                onChange={handleOrgDialogChange}
+                input={<OutlinedInput label="Organizações que o lider dialoga" />}
+                renderValue={(selected) => selected.join(', ')}
+                MenuProps={MenuProps}
+              >
+                {organizacoes.map((name) => (
+                  <MenuItem key={name.label} value={name.label}>
+                    <Checkbox checked={orgDialog.indexOf(name.label) > -1} />
+                    <ListItemText primary={name.label} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Botao variant="contained" label="Enviar" onPress={handleGrupoSend}></Botao>
           </>
         }

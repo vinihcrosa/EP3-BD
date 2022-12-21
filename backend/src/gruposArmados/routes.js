@@ -1,7 +1,9 @@
 const routes = require('express').Router();
 
-const { getGruposArmados } = require('./controller');
+const { getGruposArmados, getGruposArmadosPorArmas } = require('./controller');
 
 routes.get('/', getGruposArmados);
 
-module.exports = routes; 
+routes.get('/armas', getGruposArmadosPorArmas)
+
+module.exports = routes;
