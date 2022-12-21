@@ -6,4 +6,4 @@ routes.get('/', getGruposArmados);
 
 routes.get('/armas', getGruposArmadosPorArmas)
 
-module.exports = routes; 
+module.exports = routes;

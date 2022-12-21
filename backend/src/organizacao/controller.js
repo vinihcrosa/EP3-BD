@@ -21,4 +21,4 @@ GROUP BY organizacoesmediadoras_codigoorganizacao LIMIT 5;`
   res.send(result.rows);
 }
 
-module.exports = { getOrganizacao };
+module.exports = { getOrganizacao, getOrganizacoesPorMediacoes };

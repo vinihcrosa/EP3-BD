@@ -12,3 +12,5 @@ Então subir o Frontend, na pasta front digitar no terminal
 npm i
 npm run start
 ```
+
+Os exercicios estão na pasta DB

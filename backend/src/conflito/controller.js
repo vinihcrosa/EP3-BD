@@ -61,4 +61,15 @@ async function createConflito(req, res) {
   res.status(201).send({ result, message: 'teste' });
 }
 
-module.exports = { createConflito };
+
+async function getPaisMaiorConflitoReligioso(req, res) {
+  const query = `SELECT paisafetado, COUNT(paisafetado) as quantidade FROM conflitos c
+  JOIN conflito_paisesafetados cp on c.codigonum = cp.conflitos_codigonum
+  WHERE c.tipoconflito = 'RELIOSO'
+  GROUP BY paisafetado LIMIT1;`
+  const client = await connect();
+  const result = await client.query(query);
+
+  return res.send(result.rows[0]);
+}
+module.exports = { createConflito, getPaisMaiorConflitoReligioso };

@@ -23,6 +23,8 @@ export default function Content(props: any) {
   const [organizacoesPorMediacoes, setOrganizacoesPorMediacoes] = React.useState<any>([]);
   const [gruposArmadosPorArmas, setGruposArmadosPorArmas] = React.useState<any>([]);
 
+  const [paisMaiorConflitoReligioso, setPaisMaiorConflitoReligioso] = React.useState<any>([]);
+
   useEffect(() => {
  
     const getTipoArmas = async () => {
@@ -84,37 +86,47 @@ export default function Content(props: any) {
       */
 
 
-      const data = await api.get('/gruposArmados/arma')
+      const data = await api.get('/gruposArmados/armas')
       setGruposArmadosPorArmas(data.data);
+    }
+
+    const getPaisMaiorConflitoReligioso = async () => {
+      const data = await api.get('/conflito/religioso');
+      setPaisMaiorConflitoReligioso(data.data);
     }
 
     getTipoArmas().catch((err) => console.log(err));
     getConflitosPorMortos().catch((err) => console.log(err));
     getOrganizacoesPorMediacoes().catch((err) => console.log(err));
     getGruposArmadosPorArmas().catch((err) => console.log(err));
+    getPaisMaiorConflitoReligioso().catch((err) => console.log(err));
+
+    console.log(conflitosPorMortos)
   }, []);
   
   const { title, description, item } = props;
   const pais = 'Brasil';
   const quantidade = 10;
 
-  function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-  ) {
-    return { name, calories, fat, carbs, protein };
+  const rowsTabela1: any = []; 
+  for (let i: number = 0; i < tipoArmas.lenght; i++) {
+    rowsTabela1.push(tipoArmas[i]);
   }
 
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
+  const rowsTabela2: any = [];
+  for (let i: number = 0; i < conflitosPorMortos.lenght; i++) {
+    rowsTabela2.push(conflitosPorMortos[i]);
+  }
+
+  const rowsTabela3: any = [];
+  for (let i: number = 0; i < organizacoesPorMediacoes.lenght; i++) {
+    rowsTabela3.push(organizacoesPorMediacoes[i]);
+  }
+
+  const rowsTabela4: any = [];
+  for (let i: number = 0; i < gruposArmadosPorArmas.lenght; i++) {
+    rowsTabela4.push(gruposArmadosPorArmas[i]);
+  }
 
   return (
     <Container>
@@ -136,7 +148,7 @@ export default function Content(props: any) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {tipoArmas.map((row:any) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -144,10 +156,11 @@ export default function Content(props: any) {
                     <TableCell align="center" component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
+                    <TableCell align="center">{row.traficante}</TableCell>
+                    <TableCell align="center">{row.grupoarmado}</TableCell>
+                    <TableCell align="center">{row.tipoarma}</TableCell>
+                    <TableCell align="center">{row.capacidade}</TableCell>
+                    <TableCell align="center">{row.quantidade}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -162,22 +175,20 @@ export default function Content(props: any) {
                   <TableCell align="center">Nome do lugar / causa</TableCell>
                   <TableCell align="center">Nº de mortos</TableCell>
                   <TableCell align="center">Nº de feridos</TableCell>
-                  <TableCell align="center">Países afetados</TableCell>
+                  <TableCell align="center">Tipo de conflito</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {conflitosPorMortos.map((row:any) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell align="center" component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
+                    <TableCell align="center">{row.codigonum}</TableCell>
+                    <TableCell align="center">{row.nomelugarcausa}</TableCell>
+                    <TableCell align="center">{row.nummortos}</TableCell>
+                    <TableCell align="center">{row.numferidos}</TableCell>
+                    <TableCell align="center">{row.tipoconflito}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -189,29 +200,19 @@ export default function Content(props: any) {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Código</TableCell>
-                  <TableCell align="center">Nome</TableCell>
                   <TableCell align="center">Nº de mediações</TableCell>
-                  <TableCell align="center">Tipo da org</TableCell>
                   <TableCell align="center">Nº de pessoas</TableCell>
-                  <TableCell align="center">Código da org dependente</TableCell>
-                  <TableCell align="center">Tipo da ajuda</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {organizacoesPorMediacoes.map((row:any) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell align="center" component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
+                    <TableCell align="center">{row.organizacao}</TableCell>
+                    <TableCell align="center">{row.mediacoes}</TableCell>
+                    <TableCell align="center">{row.numpessoas}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -223,23 +224,19 @@ export default function Content(props: any) {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Código</TableCell>
-                  <TableCell align="center">Nome</TableCell>
                   <TableCell align="center">Nº armas fornecidas</TableCell>
                   <TableCell align="center">Nº total de baixas</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {gruposArmadosPorArmas.map((row:any) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                    <TableCell align="center" component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
+                    <TableCell align="center">{row.gruposarmados}</TableCell>
+                    <TableCell align="center">{row.quantidade}</TableCell>
+                    <TableCell align="center">{row.numtotalbaixas}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -250,8 +247,8 @@ export default function Content(props: any) {
 
       {title === "Países" &&
         <>
-          <p>País com maior número de conflitos religiosos: {pais}</p>
-          <p>Quantidade de conflitos: {quantidade}</p>
+          <p>País com maior número de conflitos religiosos: {paisMaiorConflitoReligioso.paiafetado}</p>
+          <p>Quantidade de conflitos: {paisMaiorConflitoReligioso.quantidade}</p>
         </>
       }
     </Container>
