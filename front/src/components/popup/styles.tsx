@@ -10,7 +10,7 @@ export const Overlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 1;
 `
 
 export const PopupContainer = styled.div`
@@ -22,6 +22,7 @@ export const PopupContainer = styled.div`
   width: 600px;
   border-radius: 20px;
   padding: 30px;
+  overflow-y: scroll;
 
   .botao {
     display: flex;

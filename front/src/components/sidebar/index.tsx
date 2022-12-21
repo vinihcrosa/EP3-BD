@@ -34,10 +34,7 @@ export default function Sidebar(props: any) {
       <Image src={logo} alt="logo"/>
       <ItensContainer onClick={() => onClick(teste)}>
         <Item onClick={brigaDeGalo} label="Visão Geral" image={dash}></Item>
-        <Item onClick={brigaDeGalo} label="Traficantes" image={gun}></Item>
-        <Item onClick={brigaDeGalo} label="Conflitos" image={warning}></Item>
-        <Item onClick={brigaDeGalo} label="Organizações" image={mala}></Item>
-        <Item onClick={brigaDeGalo} label="Grupos Armados" image={group}></Item>
+        <Item onClick={brigaDeGalo} label="Tabelas" image={gun}></Item>
         <Item onClick={brigaDeGalo} label="Países" image={world}></Item>
       </ItensContainer>
       <Botao variant="contained" label="Adicionar" onPress={handleOpenPopup}>Botao</Botao>
